@@ -191,7 +191,7 @@ pipeline {
                                 echo "Service does not exist. Creating new service..."
                                 docker service create \
                                 --name ml1 \
-                                -p 8000:80 \
+                                -p 8000:8000 \
                                 --replicas 2 \
                                 ${DOCKER_USERNAME}/salary-prediction-demo:${MODEL_VERSION}-${BUILD_NUMBER}
                             fi
