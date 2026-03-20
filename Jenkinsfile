@@ -193,7 +193,7 @@ pipeline {
                                 --name ml1 \
                                 -p 8000:80 \
                                 --replicas 2 \
-                                p${DOCKER_USERNAME}/salary-prediction-demo:${MODEL_VERSION}-${BUILD_NUMBER}
+                                ${DOCKER_USERNAME}/salary-prediction-demo:${MODEL_VERSION}-${BUILD_NUMBER}
                             fi
                             '''
                     }
