@@ -170,6 +170,36 @@ pipeline {
                 }
             }
         }
+        stage("docker run"){
+            steps{
+                script {
+                    withCredentials([usernamePassword(
+                        credentialsId: 'docker-hub',
+                        usernameVariable: 'DOCKER_USERNAME',
+                        passwordVariable: 'DOCKER_PASSWORD'
+                    )]) {
+                            sh '''
+                            if docker service inspect ml1 > /dev/null 2>&1; then
+                                echo "Service exists. Performing rolling update..."
+                                docker service update \
+                                --force \
+                                --update-parallelism 1 \
+                                --update-delay 10s \
+                                --image ${DOCKER_USERNAME}/salary-prediction-demo:${MODEL_VERSION}-${BUILD_NUMBER} \
+                                ml1
+                            else
+                                echo "Service does not exist. Creating new service..."
+                                docker service create \
+                                --name ml1 \
+                                -p 8000:80 \
+                                --replicas 2 \
+                                p${DOCKER_USERNAME}/salary-prediction-demo:${MODEL_VERSION}-${BUILD_NUMBER}
+                            fi
+                            '''
+                    }
+                }
+            }
+        }
 
     }
 
